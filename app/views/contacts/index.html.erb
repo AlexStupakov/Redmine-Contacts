@@ -1,26 +1,36 @@
 <p id="notice"><%= notice %></p>
 
 <h1>Contacts</h1>
+<% query_options = nil unless defined?(query_options) %>
+<% query_options ||= {} %>
 
-<table>
+<%= form_tag(contacts_path(@project), :method => :get, :id => 'query_form') do %>
+  <%= render :partial => 'queries/query_form' %>
+<% end %>
+
+
+<%= form_tag({}, :data => {:cm_url => issues_context_menu_path}) do -%>
+  <%= hidden_field_tag 'back_url', url_for(:params => request.query_parameters), :id => nil %>
+  <%= query_columns_hidden_tags(@query) %>
+<% end -%>
+
+<%= render_query_totals(@query) %>
+
+
+<div class="autoscroll"></div>
+<table class="list contacts odd-even <%= @query.css_classes %>">
   <thead>
     <tr>
-      <th>Project</th>
-      <th>Name</th>
-      <th>Country</th>
-      <th>City</th>
-      <th>Street</th>
-      <th>House</th>
-      <th>Phone</th>
-      <th>Zip</th>
-      <th>Email</th>
-      <th colspan="3"></th>
+      <% @query.columns.each do |column| %>
+        <%= column_header(@query, column, query_options) %>
+      <% end %>
+      <th class="buttons"></th>
     </tr>
   </thead>
 
   <tbody>
     <% @contacts.each do |contact| %>
-      <tr>
+      <tr class="<%= cycle('odd', 'even') %>">
         <td><%= contact.project_id %></td>
         <td><%= contact.name %></td>
         <td><%= contact.country %></td>
@@ -30,14 +40,21 @@
         <td><%= contact.phone %></td>
         <td><%= contact.zip %></td>
         <td><%= contact.email %></td>
-        <td><%= link_to 'Show', contact %></td>
-        <td><%= link_to 'Edit', edit_contact_path(contact) %></td>
-        <td><%= link_to 'Destroy', contact, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= contact.updated_at %></td>
+        <td><%= contact.created_at %></td>
+
+        <td class="buttons">
+          <%= link_to '', contact, title: 'Show', class: 'icon-only icon-file' %>
+          <%= link_to '', edit_contact_path(contact), title: 'Edit', class: 'icon-only icon-edit' %>
+          <%= link_to '', contact, method: :delete, data: { confirm: 'Are you sure?' }, title: 'Delete', class: 'icon-only icon-del' %>
+
+        </td>
       </tr>
-    <% end %>
+    <% end -%>
   </tbody>
 </table>
 
 <br>
 
-<%= link_to 'New Contact', new_contact_path %>
+<%= link_to 'New Contact', new_contact_path, class: 'icon icon-add' %>
+

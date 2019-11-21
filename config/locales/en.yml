@@ -1,3 +1,11 @@
 # English strings go here for Rails i18n
 en:
-  # my_label: "My label"
+  field_country: Country
+  field_city: City
+  field_street: Street
+  field_house: House
+  field_phone: Phone
+  field_zip: Zip
+  field_email: Email
+  field_created_at: Created at
+  field_updated_at: Updated at

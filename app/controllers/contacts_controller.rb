@@ -1,9 +1,33 @@
 class ContactsController < ApplicationController
   before_action :set_contact, only: [:show, :edit, :update, :destroy]
 
+  helper :journals
+  helper :projects
+  helper :custom_fields
+  helper :attachments
+  helper :queries
+  include QueriesHelper
+
   # GET /contacts
   def index
-    @contacts = Contact.all
+    use_session = !request.format.csv?
+    retrieve_query(ContactQuery, use_session)
+    if @query.valid?
+      respond_to do |format|
+        format.html {
+          @contact_count = @query.contact_count
+          @contact_pages = Paginator.new @contact_count, per_page_option, params['page']
+          @contacts = @query.contacts(:offset => @contact_pages.offset, :limit => @contact_pages.per_page)
+          render :layout => !request.xhr?
+        }
+      end
+    else
+      respond_to do |format|
+        format.html { render :layout => !request.xhr? }
+      end
+    end
+  rescue ActiveRecord::RecordNotFound
+    render_404
   end
 
   # GET /contacts/1
