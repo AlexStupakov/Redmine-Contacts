@@ -58,3 +58,9 @@
 
 <%= link_to 'New Contact', new_contact_path, class: 'icon icon-add' %>
 
+<%= javascript_tag do %>
+  $(document).ready(function() {
+    $('#query_form_with_buttons .icon-save').hide();
+  });
+  <% end %>
+

@@ -19,7 +19,7 @@ class ContactQuery < Query
 
   def initialize(attributes=nil, *args)
     super attributes
-    self.filters ||= { 'project_id' => {:operator => "o", :values => [""]} }
+    self.filters ||= {}
   end
 
 
