@@ -45,5 +45,12 @@
   <%= @contact.email %>
 </p>
 
+<% if @contact.attachments.any? %>
+  <hr />
+  <p><strong><%=l(:label_attachment_plural)%></strong></p>
+  <%= link_to_attachments @contact, :thumbnails => true %>
+<% end %>
+
+
 <%= link_to 'Edit', edit_contact_path(@contact) %> |
 <%= link_to 'Back', contacts_path %>

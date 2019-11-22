@@ -8,7 +8,6 @@ class ContactsController < ApplicationController
   helper :queries
   include QueriesHelper
 
-  # GET /contacts
   def index
     use_session = !request.format.csv?
     retrieve_query(ContactQuery, use_session)
@@ -30,11 +29,9 @@ class ContactsController < ApplicationController
     render_404
   end
 
-  # GET /contacts/1
   def show
   end
 
-  # GET /contacts/new
   def new
     @contact = Contact.new
   end
@@ -54,16 +51,20 @@ class ContactsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /contacts/1
   def update
+    @contact.init_journal(User.current)
+
+    @contact.save_attachments(params[:attachments] || (params[:contact] && params[:contact][:uploads]))
     if @contact.update(contact_params)
-      redirect_to @contact, notice: 'Contact was successfully updated.'
+      render_attachment_warning_if_needed(@contact)
+      flash[:notice] = l(:notice_successful_update) unless @contact.current_journal.new_record?
+
+      redirect_to @contact
     else
       render :edit
     end
   end
 
-  # DELETE /contacts/1
   def destroy
     @contact.destroy
     redirect_to contacts_url, notice: 'Contact was successfully destroyed.'

@@ -56,6 +56,30 @@
     <%= form.text_field :email %>
   </div>
 
+  <fieldset><legend><%= l(:label_attachment_plural) %></legend>
+    <% if contact.attachments.any? && contact.safe_attribute?('deleted_attachment_ids') %>
+      <div class="contextual"><%= link_to l(:label_edit_attachments), '#', :onclick => "$('#existing-attachments').toggle(); return false;" %></div>
+      <div id="existing-attachments" style="<%= contact.deleted_attachment_ids.blank? ? 'display:none;' : '' %>">
+        <% contact.attachments.each do |attachment| %>
+          <span class="existing-attachment">
+            <%= text_field_tag '', attachment.filename, :class => "icon icon-attachment filename", :disabled => true %>
+            <label>
+              <%= check_box_tag 'issue[deleted_attachment_ids][]',
+                                attachment.id,
+                                contact.deleted_attachment_ids.include?(attachment.id),
+                                :id => nil, :class => "deleted_attachment" %> <%= l(:button_delete) %>
+            </label>
+          </span>
+        <% end %>
+        <hr />
+      </div>
+    <% end %>
+
+    <div id="new-attachments" style="display:inline-block;">
+      <%= render :partial => 'attachments/form', :locals => {:container => contact} %>
+    </div>
+  </fieldset>
+
   <div class="actions">
     <%= form.submit %>
   </div>

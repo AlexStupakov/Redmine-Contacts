@@ -1,11 +1,18 @@
 class Contact < ActiveRecord::Base
+  include Redmine::SafeAttributes
+
   has_many :journals, :as => :journalized, :dependent => :destroy, :inverse_of => :journalized
   belongs_to :project
 
+  acts_as_attachable  :delete_permission => :manage_files,
+                      :after_add => :attachment_added,
+                      :after_remove => :attachment_removed
+
+  attr_accessor :deleted_attachment_ids
   attr_reader :current_journal
   delegate :notes, :notes=, :private_notes, :private_notes=, :to => :current_journal, :allow_nil => true
 
-  after_save :create_journal
+  after_save :delete_selected_attachments, :create_journal
 
   def init_journal(user, notes = "")
     @current_journal ||= Journal.new(:journalized => self, :user => user, :notes => notes)
@@ -82,6 +89,62 @@ class Contact < ActiveRecord::Base
   def create_journal
     if current_journal
       current_journal.save
+    end
+  end
+
+  def deleted_attachment_ids
+    Array(@deleted_attachment_ids).map(&:to_i)
+  end
+
+  safe_attributes 'deleted_attachment_ids',
+                  :if => lambda {|contact, user| contact.attachments_deletable?(user)}
+
+
+  def delete_selected_attachments
+    if deleted_attachment_ids.present?
+      objects = attachments.where(:id => deleted_attachment_ids.map(&:to_i))
+      attachments.delete(objects)
+    end
+  end
+
+  # Callback on file attachment
+  def attachment_added(attachment)
+    if current_journal && !attachment.new_record?
+      current_journal.journalize_attachment(attachment, :added)
+    end
+  end
+
+  # Callback on attachment deletion
+  def attachment_removed(attachment)
+    if current_journal && !attachment.new_record?
+      current_journal.journalize_attachment(attachment, :removed)
+      current_journal.save
+    end
+  end
+
+  # Returns true if user or current user is allowed to edit the issue
+  def attributes_editable?(user=User.current)
+    user_tracker_permission?(user, :edit_contacts)
+  end
+
+  # Overrides Redmine::Acts::Attachable::InstanceMethods#attachments_editable?
+  def attachments_editable?(user=User.current)
+    attributes_editable?(user)
+  end
+
+  private
+
+  def user_tracker_permission?(user, permission)
+    if project && !project.active?
+      perm = Redmine::AccessControl.permission(permission)
+      return false unless perm && perm.read?
+    end
+
+    if user.admin?
+      true
+    else
+      roles = user.roles_for_project(project).select {|r| r.has_permission?(permission)}
+      roles.any? {|r| r.permissions_all_trackers?(permission) || r.permissions_tracker_ids?(permission, tracker_id)}
     end
   end
 end
