@@ -1,4 +1,4 @@
-<%= form_with(model: contact, local: true) do |form| %>
+<%= form_with(model: contact, local: true, id: 'contact_form') do |form| %>
   <% if contact.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(contact.errors.count, "error") %> prohibited this contact from being saved:</h2>
@@ -11,50 +11,50 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <p>
     <%= form.label :project_id %>
-    <%= form.number_field :project_id %>
-  </div>
+    <%= form.select :project_id, project_tree_options_for_select(@projects, :selected => @contact.project), {:required => true} %>
+  </p>
 
-  <div class="field">
+  <p>
     <%= form.label :name %>
-    <%= form.text_field :name %>
-  </div>
+    <%= form.text_field :name, class: 'contact_input', style: 'width:80%' %>
+  </p>
 
-  <div class="field">
+  <p>
     <%= form.label :country %>
-    <%= form.text_field :country %>
-  </div>
+    <%= form.text_field :country, class: 'contact_input', style: 'width:80%' %>
+  </p>
 
-  <div class="field">
+  <p>
     <%= form.label :city %>
-    <%= form.text_field :city %>
-  </div>
+    <%= form.text_field :city, class: 'contact_input', style: 'width:80%' %>
+  </p>
 
-  <div class="field">
+  <p>
     <%= form.label :street %>
-    <%= form.text_field :street %>
-  </div>
+    <%= form.text_field :street, class: 'contact_input', style: 'width:80%' %>
+  </p>
 
-  <div class="field">
+  <p>
     <%= form.label :house %>
-    <%= form.text_field :house %>
-  </div>
+    <%= form.text_field :house, class: 'contact_input', style: 'width:80%' %>
+  </p>
 
-  <div class="field">
+  <p>
     <%= form.label :phone %>
-    <%= form.text_field :phone %>
-  </div>
+    <%= form.text_field :phone, class: 'contact_input', style: 'width:80%' %>
+  </p>
 
-  <div class="field">
+  <p>
     <%= form.label :zip %>
-    <%= form.text_field :zip %>
-  </div>
+    <%= form.text_field :zip, class: 'contact_input', style: 'width:80%' %>
+  </p>
 
-  <div class="field">
+  <p>
     <%= form.label :email %>
-    <%= form.text_field :email %>
-  </div>
+    <%= form.text_field :email, class: 'contact_input', style: 'width:80%' %>
+  </p>
 
   <fieldset><legend><%= l(:label_attachment_plural) %></legend>
     <% if contact.attachments.any? && contact.safe_attribute?('deleted_attachment_ids') %>

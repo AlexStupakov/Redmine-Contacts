@@ -1,53 +1,56 @@
+<h2>Contact</h2>
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Project:</strong>
-  <%= @contact.project_id %>
-</p>
+<div class="tabular">
+  <p>
+    <label>Project:</label>
+    <%= @contact.project.name %>
+  </p>
 
-<p>
-  <strong>Name:</strong>
-  <%= @contact.name %>
-</p>
+  <p>
+    <label>Name:</label>
+    <%= @contact.name %>
+  </p>
 
-<p>
-  <strong>Country:</strong>
-  <%= @contact.country %>
-</p>
+  <p>
+    <label>Country:</label>
+    <%= @contact.country %>
+  </p>
 
-<p>
-  <strong>City:</strong>
-  <%= @contact.city %>
-</p>
+  <p>
+    <label>City:</label>
+    <%= @contact.city %>
+  </p>
 
-<p>
-  <strong>Street:</strong>
-  <%= @contact.street %>
-</p>
+  <p>
+    <label>Street:</label>
+    <%= @contact.street %>
+  </p>
 
-<p>
-  <strong>House:</strong>
-  <%= @contact.house %>
-</p>
+  <p>
+    <label>House:</label>
+    <%= @contact.house %>
+  </p>
 
-<p>
-  <strong>Phone:</strong>
-  <%= @contact.phone %>
-</p>
+  <p>
+    <label>Phone:</label>
+    <%= @contact.phone %>
+  </p>
 
-<p>
-  <strong>Zip:</strong>
-  <%= @contact.zip %>
-</p>
+  <p>
+    <label>Zip:</label>
+    <%= @contact.zip %>
+  </p>
 
-<p>
-  <strong>Email:</strong>
-  <%= @contact.email %>
-</p>
+  <p>
+    <label>Email:</label>
+    <%= @contact.email %>
+  </p>
+</div>
 
 <% if @contact.attachments.any? %>
   <hr />
-  <p><strong><%=l(:label_attachment_plural)%></strong></p>
+  <p><label><%=l(:label_attachment_plural)%></label></p>
   <%= link_to_attachments @contact, :thumbnails => true %>
 <% end %>
 

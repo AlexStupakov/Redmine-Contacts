@@ -1,6 +1,12 @@
-<h1>Editing Contact</h1>
+<h2>Editing Contact</h2>
 
-<%= render 'form', contact: @contact %>
+<div class="box">
+  <fieldset class="tabular"><legend><%= l(:label_change_properties) %></legend>
+    <div id="all_attributes">
+      <%= render 'form', contact: @contact %>
+    </div>
+  </fieldset>
+</div>
 
 <%= link_to 'Show', @contact %> |
 <%= link_to 'Back', contacts_path %>

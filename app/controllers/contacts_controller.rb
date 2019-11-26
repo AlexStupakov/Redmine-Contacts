@@ -1,5 +1,6 @@
 class ContactsController < ApplicationController
   before_action :set_contact, only: [:show, :edit, :update, :destroy]
+  before_action :set_projects, only: [:new, :edit]
 
   helper :journals
   helper :projects
@@ -81,4 +82,9 @@ class ContactsController < ApplicationController
     def contact_params
       params.require(:contact).permit(:project_id, :name, :country, :city, :street, :house, :phone, :zip, :email)
     end
+
+  def set_projects
+    @projects = Project.all
+  end
+
 end
