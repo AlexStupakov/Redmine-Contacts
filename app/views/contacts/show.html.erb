@@ -1,57 +1,81 @@
-<h2>Contact</h2>
 <p id="notice"><%= notice %></p>
+<h2>Contact <%= @contact.name %></h2>
 
-<div class="tabular">
-  <p>
-    <label>Project:</label>
-    <%= @contact.project.name %>
+<div class="issue">
+  <p class="author">
+    <%= authoring @contact.created_at, @contact.journals&.first&.user %>.
+
+    <% if @contact.created_at != @contact.updated_at %>
+      <%= l(:label_updated_time, time_tag(@contact.updated_at)).html_safe %>.
+    <% end %>
   </p>
 
-  <p>
-    <label>Name:</label>
-    <%= @contact.name %>
-  </p>
+  <div class="attributes splitcontent">
+<!--    <div class="splitcontent">-->
+    <div class="splitcontentleft">
 
-  <p>
-    <label>Country:</label>
-    <%= @contact.country %>
-  </p>
+      <div class="attribute">
+        <div class="label">Project:</div>
+        <%= @contact.project.name %>
+      </div>
 
-  <p>
-    <label>City:</label>
-    <%= @contact.city %>
-  </p>
+      <div class="attribute">
+        <div class="label">Name:</div>
+        <%= @contact.name %>
+      </div>
 
-  <p>
-    <label>Street:</label>
-    <%= @contact.street %>
-  </p>
+      <div class="attribute">
+        <div class="label">Country:</div>
+        <%= @contact.country %>
+      </div>
 
-  <p>
-    <label>House:</label>
-    <%= @contact.house %>
-  </p>
+      <div class="attribute">
+        <div class="label">City:</div>
+        <%= @contact.city %>
+      </div>
 
-  <p>
-    <label>Phone:</label>
-    <%= @contact.phone %>
-  </p>
+      <div class="attribute">
+        <div class="label">Street:</div>
+        <%= @contact.street %>
+      </div>
 
-  <p>
-    <label>Zip:</label>
-    <%= @contact.zip %>
-  </p>
+    </div>
 
-  <p>
-    <label>Email:</label>
-    <%= @contact.email %>
-  </p>
+    <div class="splitcontentleft">
+      <div class="attribute">
+        <div class="label">House:</div>
+        <%= @contact.house %>
+      </div>
+
+      <div class="attribute">
+        <div class="label">Phone:</div>
+        <%= @contact.phone %>
+      </div>
+
+      <div class="attribute">
+        <div class="label">Zip:</div>
+        <%= @contact.zip %>
+      </div>
+
+      <div class="attribute">
+        <div class="label">Email:</div>
+        <%= @contact.email %>
+      </div>
+    </div>
+  </div>
+
+  <% if @contact.attachments.any? %>
+    <hr />
+    <p><label><%=l(:label_attachment_plural)%></label></p>
+    <%= link_to_attachments @contact, :thumbnails => true %>
+  <% end %>
 </div>
 
-<% if @contact.attachments.any? %>
-  <hr />
-  <p><label><%=l(:label_attachment_plural)%></label></p>
-  <%= link_to_attachments @contact, :thumbnails => true %>
+<% if @journals.present? %>
+  <div id="history">
+    <h3><%=l(:label_history)%></h3>
+    <%= render :partial => 'history', :locals => { :issue => @issue, :journals => @journals } %>
+  </div>
 <% end %>
 
 

@@ -2,6 +2,9 @@ class ContactsController < ApplicationController
   before_action :set_contact, only: [:show, :edit, :update, :destroy]
   before_action :set_projects, only: [:new, :edit]
 
+  rescue_from Query::StatementInvalid, :with => :query_statement_invalid
+
+  helper :issues
   helper :journals
   helper :projects
   helper :custom_fields
@@ -31,6 +34,7 @@ class ContactsController < ApplicationController
   end
 
   def show
+    @journals = @contact.visible_journals_with_index
   end
 
   def new
