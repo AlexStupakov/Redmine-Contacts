@@ -64,7 +64,7 @@
           <span class="existing-attachment">
             <%= text_field_tag '', attachment.filename, :class => "icon icon-attachment filename", :disabled => true %>
             <label>
-              <%= check_box_tag 'issue[deleted_attachment_ids][]',
+              <%= check_box_tag 'contact[deleted_attachment_ids][]',
                                 attachment.id,
                                 contact.deleted_attachment_ids.include?(attachment.id),
                                 :id => nil, :class => "deleted_attachment" %> <%= l(:button_delete) %>

@@ -36,13 +36,9 @@ class ContactsController < ApplicationController
     @contact = Contact.new
   end
 
-  # GET /contacts/1/edit
-  def edit
-  end
-
-  # POST /contacts
   def create
     @contact = Contact.new(contact_params)
+    @contact.save_attachments(params[:attachments] || (params[:contact] && params[:contact][:uploads]))
 
     if @contact.save
       redirect_to @contact, notice: 'Contact was successfully created.'
@@ -51,10 +47,15 @@ class ContactsController < ApplicationController
     end
   end
 
+  def edit
+  end
+
   def update
     @contact.init_journal(User.current)
+    @contact.safe_attributes = params[:contact]
+    @contact.save_attachments(params[:attachments].except(:dummy) ||
+                                (params[:contact] && params[:contact][:uploads]))
 
-    @contact.save_attachments(params[:attachments] || (params[:contact] && params[:contact][:uploads]))
     if @contact.update(contact_params)
       render_attachment_warning_if_needed(@contact)
       flash[:notice] = l(:notice_successful_update) unless @contact.current_journal.new_record?
