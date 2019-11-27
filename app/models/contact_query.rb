@@ -13,8 +13,8 @@ class ContactQuery < Query
     QueryColumn.new(:phone, :sortable => "#{Contact.table_name}.phone", :frozen => true),
     QueryColumn.new(:zip, :sortable => "#{Contact.table_name}.zip", :frozen => true),
     QueryColumn.new(:email, :sortable => "#{Contact.table_name}.email", :frozen => true),
-    QueryColumn.new(:updated_at, :sortable => "#{Contact.table_name}.updated_at", :default_order => 'desc', :frozen => true),
-    QueryColumn.new(:created_at, :sortable => "#{Contact.table_name}.created_at", :default_order => 'desc', :frozen => true)
+    QueryColumn.new(:updated_on, :sortable => "#{Contact.table_name}.updated_on", :default_order => 'desc', :frozen => true),
+    QueryColumn.new(:created_on, :sortable => "#{Contact.table_name}.created_on", :default_order => 'desc', :frozen => true)
   ]
 
   def initialize(attributes=nil, *args)
@@ -43,8 +43,8 @@ class ContactQuery < Query
     add_available_filter 'phone', :type => :text
     add_available_filter 'zip', :type => :text
     add_available_filter 'email', :type => :text
-    add_available_filter 'updated_at', :type => :date
-    add_available_filter 'created_at', :type => :date
+    add_available_filter 'updated_on', :type => :date
+    add_available_filter 'created_on', :type => :date
 
     # add_available_filter("project.status",
     #   :type => :list,
@@ -66,7 +66,7 @@ class ContactQuery < Query
 
   def default_columns_names
     @default_columns_names ||= begin
-      default_columns = %i(name country city street house phone zip email updated_at created_at)
+      default_columns = %i(name country city street house phone zip email updated_on created_on)
       project.present? ? default_columns : [:project] | default_columns
     end
   end

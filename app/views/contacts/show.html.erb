@@ -3,10 +3,10 @@
 
 <div class="issue">
   <p class="author">
-    <%= authoring @contact.created_at, @contact.journals&.first&.user %>.
+    <%= authoring @contact.created_on, @contact.journals&.first&.user %>.
 
-    <% if @contact.created_at != @contact.updated_at %>
-      <%= l(:label_updated_time, time_tag(@contact.updated_at)).html_safe %>.
+    <% if @contact.created_on != @contact.updated_on %>
+      <%= l(:label_updated_time, time_tag(@contact.updated_on)).html_safe %>.
     <% end %>
   </p>
 

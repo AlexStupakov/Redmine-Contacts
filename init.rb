@@ -6,3 +6,15 @@ Redmine::Plugin.register :redmine_contacts do
   url 'http://example.com/path/to/plugin'
   author_url 'http://example.com/about'
 end
+
+Redmine::Search.map do |search|
+  search.register :contacts
+end
+
+Redmine::MenuManager.map :application_menu do |menu|
+  menu.push(
+    :contacts,
+    { controller: 'contacts', action: 'index' },
+    caption: 'Contacts')
+end
+

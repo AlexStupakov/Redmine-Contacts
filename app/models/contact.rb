@@ -8,7 +8,14 @@ class Contact < ActiveRecord::Base
                       :after_add => :attachment_added,
                       :after_remove => :attachment_removed
 
-  attr_accessor :deleted_attachment_ids
+  acts_as_searchable columns: %w(contacts.name country city email),
+                     scope: joins(:project)
+
+  acts_as_event title: Proc.new { |o| "#{o.name} #{o.email}" },
+                description: :name,
+                url: Proc.new { |o| { controller: 'contacts', action: 'show', id: o.id }}
+
+                attr_accessor :deleted_attachment_ids
   attr_reader :current_journal
   delegate :notes, :notes=, :private_notes, :private_notes=, :to => :current_journal, :allow_nil => true
 
@@ -30,7 +37,7 @@ class Contact < ActiveRecord::Base
 
   # Returns the names of attributes that are journalized when updating the issue
   def journalized_attribute_names
-    names = Contact.column_names - %w(id created_at updated_at)
+    names = Contact.column_names - %w(id created_on updated_on)
     names
   end
 
