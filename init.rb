@@ -1,3 +1,14 @@
+require 'redmine'
+
+Rails.configuration.to_prepare do
+  if CustomFieldsHelper.const_defined?(:CUSTOM_FIELDS_TABS)
+    CustomFieldsHelper::CUSTOM_FIELDS_TABS.push({:name => 'ContactCustomField',
+                                                 :partial => 'custom_fields/index',
+                                                 :label => :label_contact_plural})
+  end
+end
+
+
 Redmine::Plugin.register :redmine_contacts do
   name 'Redmine Contacts plugin'
   author 'Author name'
