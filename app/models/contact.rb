@@ -9,6 +9,8 @@ class Contact < ActiveRecord::Base
                       :after_add => :attachment_added,
                       :after_remove => :attachment_removed
 
+  acts_as_customizable
+
   acts_as_searchable columns: %w(contacts.name country city email),
                      scope: joins(:project)
 
@@ -86,10 +88,6 @@ class Contact < ActiveRecord::Base
     result
   end
 
-  def custom_field_values
-    []
-  end
-
   def notified_users
     []
   end
@@ -109,6 +107,16 @@ class Contact < ActiveRecord::Base
   def deleted_attachment_ids
     Array(@deleted_attachment_ids).map(&:to_i)
   end
+
+  safe_attributes 'name',
+                  'country',
+                  'city',
+                  'street',
+                  'phone',
+                  'zip',
+                  'email',
+                  'custom_field_values',
+                  'custom_fields'
 
   safe_attributes 'deleted_attachment_ids',
                   :if => lambda {|contact, user| contact.attachments_deletable?(user)}
