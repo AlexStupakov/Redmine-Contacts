@@ -1,8 +1,9 @@
 class Contact < ActiveRecord::Base
   include Redmine::SafeAttributes
 
-  has_many :journals, :as => :journalized, :dependent => :destroy, :inverse_of => :journalized
+  has_many :journals, as: :journalized, dependent: :destroy, inverse_of: :journalized
   belongs_to :project
+  belongs_to :author, class_name: 'User'
 
   acts_as_attachable  :delete_permission => :manage_files,
                       :after_add => :attachment_added,
@@ -15,7 +16,13 @@ class Contact < ActiveRecord::Base
                 description: :name,
                 url: Proc.new { |o| { controller: 'contacts', action: 'show', id: o.id }}
 
-                attr_accessor :deleted_attachment_ids
+  acts_as_activity_provider scope: joins(:project),
+                            permission: nil,
+                            author_key: :author_id
+
+
+
+  attr_accessor :deleted_attachment_ids
   attr_reader :current_journal
   delegate :notes, :notes=, :private_notes, :private_notes=, :to => :current_journal, :allow_nil => true
 
@@ -64,7 +71,7 @@ class Contact < ActiveRecord::Base
   def visible_journals_with_index(user=User.current)
     result = journals.
       preload(:details).
-      preload(:user => :email_address).
+      preload(user: :email_address).
       reorder(:created_on, :id).to_a
 
     result.each_with_index {|j,i| j.indice = i+1}
@@ -109,7 +116,7 @@ class Contact < ActiveRecord::Base
 
   def delete_selected_attachments
     if deleted_attachment_ids.present?
-      objects = attachments.where(:id => deleted_attachment_ids.map(&:to_i))
+      objects = attachments.where(id: deleted_attachment_ids.map(&:to_i))
       attachments.delete(objects)
     end
   end

@@ -11,6 +11,10 @@ Redmine::Search.map do |search|
   search.register :contacts
 end
 
+Redmine::Activity.map do |activity|
+  activity.register :contacts
+end
+
 Redmine::MenuManager.map :application_menu do |menu|
   menu.push(
     :contacts,
